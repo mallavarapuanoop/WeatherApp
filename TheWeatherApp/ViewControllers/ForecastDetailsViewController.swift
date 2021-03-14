@@ -9,7 +9,8 @@ import UIKit
 
 class ForecastDetailsViewController: UIViewController {
     
-    var forecast: Forecast?
+    var main: Main?
+    var weather: Weather?
     
     private var detailsStackView: UIStackView = {
         let stackView = UIStackView()
@@ -57,22 +58,24 @@ class ForecastDetailsViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        guard let forecast = forecast,
-              let temperature = forecast.temperature,
-              let feelsLike = forecast.feelsLike else { return }
+        guard let main = main,
+              let temperature = main.temp,
+              let feelsLike = main.feels_like,
+              let weather = weather,
+              let climate = weather.main,
+              let climateDescription = weather.description else { return }
         
         temperatureLabel.text = "\(temperature)"
         feelsLikeLabel.text = "Feels like: \(feelsLike)"
         
-        climateLabel.text = forecast.climate
-        climateDescriptionLabel.text = forecast.climateDescription
+        climateLabel.text = climate
+        climateDescriptionLabel.text = climateDescription
     }
     
     static func createViewController() -> ForecastDetailsViewController {
         let storyboard = UIStoryboard(name: "Main", bundle: .main)
         return storyboard.instantiateViewController(withIdentifier: "ForecastDetailsViewController") as! ForecastDetailsViewController
     }
-    
     
     private func constructViews() {
         detailsStackView.addArrangedSubview(temperatureLabel)

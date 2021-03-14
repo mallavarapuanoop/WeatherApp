@@ -7,16 +7,21 @@
 
 import Foundation
 
-class Forecast {
-    var climate: String?
-    var temperature: Double?
-    var feelsLike: Double?
-    var climateDescription: String?
-    
-    init(climate: String? = nil, temperature: Double? = nil, feelsLike: Double? = nil, climateDescription: String? = nil) {
-        self.climate = climate
-        self.temperature = temperature
-        self.feelsLike = feelsLike
-        self.climateDescription = climateDescription
-    }
+class Forecast: Codable {
+    let list: [List]?
+}
+
+class List: Codable {
+    let main: Main?
+    let weather: [Weather]?
+}
+
+class Main: Codable {
+    let temp: Double?
+    let feels_like: Double?
+}
+
+class Weather: Codable {
+    let main: String?
+    let description: String?
 }

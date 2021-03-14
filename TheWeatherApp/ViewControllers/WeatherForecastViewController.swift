@@ -41,24 +41,35 @@ class WeatherForecastViewController: UIViewController {
 
 extension WeatherForecastViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        weatherForecastManager.forecastArray.count
+        weatherForecastManager.foreCast?.list?.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let main = weatherForecastManager.foreCast?.list?[indexPath.row].main,
+              let weather = weatherForecastManager.foreCast?.list?[indexPath.row].weather,
+              let climate = weather.first?.main else {
+            return UITableViewCell ()
+        }
+        
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell",
                                                  for: indexPath)
         
-        let forecast = weatherForecastManager.forecastArray[indexPath.row]
+        cell.textLabel?.text = "\(climate)"
         
-        cell.textLabel?.text = forecast.climate
+        cell.detailTextLabel?.text = "Temp: \(main.temp ?? 0)"
         
-        cell.detailTextLabel?.text = "Temp: \(forecast.temperature ?? 0)"
+        
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard let main = weatherForecastManager.foreCast?.list?[indexPath.row].main,
+              let weather = weatherForecastManager.foreCast?.list?[indexPath.row].weather else {
+            return
+        }
         let forecastDetailsController = ForecastDetailsViewController.createViewController()
-        forecastDetailsController.forecast = weatherForecastManager.forecastArray[indexPath.row]
+        forecastDetailsController.main = main
+        forecastDetailsController.weather = weather.first
         self.navigationController?.pushViewController(forecastDetailsController, animated: true)
     }
 }
